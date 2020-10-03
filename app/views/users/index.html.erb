@@ -2,7 +2,7 @@
 	<div class="col-xs-3">
 		<h2>User info</h2>
 		<%= render 'users/profile', user: @user %>
-		
+
 		<h2>New book</h2>
 		<%= render 'books/form', book: @book %>
 	</div>
@@ -18,12 +18,21 @@
 					<th colspan="3"></th>
 				</tr>
 			</thead>
-		
+
 			<tbody>
 				<% @users.each do |user| %>
 				<tr>
 					<td><%= attachment_image_tag(user, :profile_image, :fill, 50, 50, fallback: "no-image-mini.jpg") %></td>
 					<td><%= user.name %></td>
+					<td>フォロー数：<%= user.relationships.count%></td>
+					<td>フォロワー数：<%= @relationships.user_id.user.count %></td>
+					<td>
+						<% if current_user.followed_by?(user) %>
+							<%= link_to "フォローを外す", user_relationships_path(user), method: :delete %>
+							<% else %>
+							<%= link_to "フォローする", user_relationships_path(user), method: :post %>
+						<% end %>
+					</td>
 					<td><%= link_to "Show", user_path(user), class: "user_#{user.id}" %></td>
 				</tr>
 				<% end %>
